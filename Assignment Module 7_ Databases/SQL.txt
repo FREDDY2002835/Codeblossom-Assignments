@@ -1,0 +1,102 @@
+-- step 1a: connect to northwind database
+USE Northwind;
+
+
+-- Step 1b: List all tables
+SELECT TABLE_NAME
+FROM INFORMATION_SCHEMA.TABLES
+WHERE TABLE_TYPE = 'BASE TABLE';
+/* INFORMATION_SCHEMA.TABLES → system table that stores all table names
+TABLE_TYPE = 'BASE TABLE' → filters out views, only real tables
+SELECT TABLE_NAME → shows the names of tables only */
+-----------------------------------------------------------------------------
+
+-- Step 2a: Get the first 10 customers
+SELECT TOP 10 *
+FROM Customers;
+/*  SELECT * → selects all columns from the table
+TOP 10 → only shows the first 10 rows
+FROM Customers → tells SQL which table to use */
+
+
+-- Step 2b: Get products with price greater than $50
+SELECT ProductName, UnitPrice
+FROM Products
+WHERE UnitPrice > 50;
+/* ProductName, UnitPrice → only these columns are shown
+FROM Products → table we’re querying
+WHERE UnitPrice > 50 → filters rows, only products costing more than $50 */
+-----------------------------------------------------------------------------
+
+-- Step 3a: Orders placed by customers in the USA
+SELECT Orders.OrderID, Customers.CompanyName, Orders.OrderDate
+FROM Orders
+INNER JOIN Customers
+ON Orders.CustomerID = Customers.CustomerID
+WHERE Customers.Country = 'USA';
+/* INNER JOIN → combines Orders with Customers
+ON Orders.CustomerID = Customers.CustomerID → links each order to the correct customer
+WHERE Customers.Country = 'USA' → only orders from USA
+SELECT Orders.OrderID, Customers.CompanyName, Orders.OrderDate → shows only key information */
+
+
+
+-- Step 3b: Employees born after 1960, sorted by birth date
+SELECT FirstName, LastName, BirthDate
+FROM Employees
+WHERE BirthDate > '1960-01-01'
+ORDER BY BirthDate ASC;
+/* WHERE BirthDate > '1960-01-01' → filters employees born after 1960
+ORDER BY BirthDate ASC → sorts from oldest to youngest
+Shows only FirstName, LastName, and BirthDate */
+-------------------------------------------------------------------------------------------
+
+-- Step 4a: Count the number of products in each category
+SELECT CategoryID, COUNT(*) AS TotalProducts
+FROM Products
+GROUP BY CategoryID;
+/* COUNT(*) → counts the number of rows in each group
+GROUP BY CategoryID → groups products by category
+AS TotalProducts → gives a readable column name for the result */
+
+
+
+-- Step 4b: Average unit price per supplier
+SELECT SupplierID, AVG(UnitPrice) AS AveragePrice
+FROM Products
+GROUP BY SupplierID;
+/* AVG(UnitPrice) → calculates the average price of products for each supplier
+GROUP BY SupplierID → groups products by supplier
+AS AveragePrice → readable column name */
+-----------------------------------------------------------------------------------------
+
+
+-- Step 5a: Get order details including product names, quantities, and prices
+SELECT 
+    Orders.OrderID,
+    Products.ProductName,
+    [Order Details].Quantity,
+    [Order Details].UnitPrice
+FROM [Order Details]
+INNER JOIN Orders
+ON [Order Details].OrderID = Orders.OrderID
+INNER JOIN Products
+ON [Order Details].ProductID = Products.ProductID;
+/* [Order Details] → table name has a space, so we use brackets
+INNER JOIN Orders → links each order detail to the correct order
+INNER JOIN Products → links each order detail to the correct product
+We select OrderID, ProductName, Quantity, UnitPrice for clarity */
+
+
+
+-- Step 5b: List customers who have never placed an order
+SELECT Customers.CustomerID, Customers.CompanyName
+FROM Customers
+LEFT JOIN Orders
+ON Customers.CustomerID = Orders.CustomerID
+WHERE Orders.CustomerID IS NULL;
+/* LEFT JOIN → keeps all customers, even if they have no orders
+Orders.CustomerID IS NULL → filters only customers without orders
+INNER JOIN would exclude these customers, so we must use LEFT JOIN */
+-------------------------------------------------------------------------------
+

@@ -1,0 +1,121 @@
+==============================
+MFLIX MONGODB QUERIES
+Name: Fred Muhimuzi
+==============================
+
+
+--------------------------------
+TASK 2: BASIC QUERIES
+--------------------------------
+
+# 1. Retrieve the first 10 movies
+# Purpose: Display a sample of movie documents
+# Method: No filter, only limit results
+
+Filter: {}
+Limit: 10
+
+
+# 2. Movies with more than 3 awards in Adventure category
+# Purpose: Find movies that have won more than 3 awards and belong to Adventure genre
+
+{
+  "awards.wins": { "$gt": 3 },
+  "genres": "Adventure"
+}
+
+
+--------------------------------
+TASK 3: FILTERING AND SORTING
+--------------------------------
+
+# 1. Movies released after 2010
+# Purpose: Get modern movies only
+
+{
+  "year": { "$gt": 2010 }
+}
+
+
+# 2. User with highest number of comments
+# Purpose: Identify the most active user
+
+[
+  {
+    "$group": {
+      "_id": "$email",
+      "totalComments": { "$sum": 1 }
+    }
+  },
+  {
+    "$sort": { "totalComments": -1 }
+  },
+  {
+    "$limit": 1
+  }
+]
+
+
+--------------------------------
+TASK 4: AGGREGATION AND GROUPING
+--------------------------------
+
+# 1. Display IMDb rating for each movie
+# Purpose: Show movie titles with their ratings
+
+[
+  {
+    "$project": {
+      "title": 1,
+      "avgRating": "$imdb.rating"
+    }
+  }
+]
+
+
+# 2. Total number of movies per genre
+# Purpose: Count how many movies exist in each genre
+
+[
+  { "$unwind": "$genres" },
+  {
+    "$group": {
+      "_id": "$genres",
+      "totalMovies": { "$sum": 1 }
+    }
+  },
+  {
+    "$sort": { "totalMovies": -1 }
+  }
+]
+
+
+--------------------------------
+TASK 5: ADVANCED QUERIES
+--------------------------------
+
+# 1. Display 5 latest comments
+# Purpose: Show the most recent user comments
+
+Filter: {}
+Sort: { "date": -1 }
+Limit: 5
+
+
+# 2. Movies with highest number of awards
+# Purpose: Find top 5 most awarded movies
+
+[
+  {
+    "$project": {
+      "title": 1,
+      "totalAwards": "$awards.wins"
+    }
+  },
+  {
+    "$sort": { "totalAwards": -1 }
+  },
+  {
+    "$limit": 5
+  }
+]
