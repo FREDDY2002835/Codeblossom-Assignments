@@ -1,0 +1,27 @@
+CREATE TABLE IF NOT EXISTS categories (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL UNIQUE,
+  description TEXT,
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS suppliers (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(150) NOT NULL UNIQUE,
+  contact_email VARCHAR(200),
+  country VARCHAR(100),
+  created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS items (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(200) NOT NULL,
+  description TEXT,
+  category_id INTEGER NOT NULL REFERENCES categories(id),
+  supplier_id INTEGER REFERENCES suppliers(id) ON DELETE SET NULL,
+  quantity NUMERIC(10, 2) NOT NULL DEFAULT 0,
+  price NUMERIC(10, 2) NOT NULL DEFAULT 0,
+  unit VARCHAR(50) NOT NULL DEFAULT 'units',
+  low_stock_threshold NUMERIC(10, 2) DEFAULT 10,
+  created_at TIMESTAMP DEFAULT NOW()
+); 

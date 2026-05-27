@@ -1,0 +1,95 @@
+<div class="stats-grid">
+  <div class="stat-card gold">
+    <div class="stat-label">Total SKUs</div>
+    <div class="stat-value"><%= stats.total_items || 0 %></div>
+  </div>
+  <div class="stat-card caramel">
+    <div class="stat-label">Inventory Value</div>
+    <div class="stat-value">$<%= parseFloat(stats.total_value || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) %></div>
+  </div>
+  <div class="stat-card alert">
+    <div class="stat-label">Low Stock Alerts</div>
+    <div class="stat-value"><%= stats.low_stock_count || 0 %></div>
+  </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px;">
+  <div>
+    <div class="section-header">
+      <span class="section-title">⚠ Low Stock Items</span>
+      <a href="/items" class="section-link">View all →</a>
+    </div>
+    <% if (lowStock.length === 0) { %>
+      <div class="low-stock-list">
+        <div class="empty-state">
+          <div class="empty-icon">✓</div>
+          <p>All items are well stocked!</p>
+        </div>
+      </div>
+    <% } else { %>
+      <div class="low-stock-list">
+        <% lowStock.slice(0,6).forEach(item => { %>
+          <a href="/items/<%= item.id %>" style="text-decoration:none;display:block;">
+            <div class="low-stock-item">
+              <div>
+                <div class="low-stock-name"><%= item.name %></div>
+                <div class="low-stock-meta"><%= item.category_name %></div>
+              </div>
+              <div class="low-stock-qty"><%= parseFloat(item.quantity) %> <%= item.unit %></div>
+            </div>
+          </a>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+
+  <div>
+    <div class="section-header">
+      <span class="section-title">Categories</span>
+      <a href="/categories/new" class="section-link">+ New</a>
+    </div>
+    <% if (categories.length === 0) { %>
+      <div class="table-wrap">
+        <div class="empty-state"><div class="empty-icon">◫</div><p>No categories yet. <a href="/categories/new">Add one.</a></p></div>
+      </div>
+    <% } else { %>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Name</th><th>Items</th></tr></thead>
+          <tbody>
+            <% categories.slice(0,6).forEach(cat => { %>
+              <tr>
+                <td><a href="/categories/<%= cat.id %>"><%= cat.name %></a></td>
+                <td><span class="tag"><%= cat.item_count %></span></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+
+    <div class="section-header" style="margin-top:24px;">
+      <span class="section-title">Suppliers</span>
+      <a href="/suppliers/new" class="section-link">+ New</a>
+    </div>
+    <% if (suppliers.length === 0) { %>
+      <div class="table-wrap">
+        <div class="empty-state"><div class="empty-icon">◷</div><p>No suppliers yet. <a href="/suppliers/new">Add one.</a></p></div>
+      </div>
+    <% } else { %>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Name</th><th>Country</th></tr></thead>
+          <tbody>
+            <% suppliers.slice(0,5).forEach(s => { %>
+              <tr>
+                <td><a href="/suppliers/<%= s.id %>"><%= s.name %></a></td>
+                <td style="color:var(--text-light);font-size:0.85rem;"><%= s.country || '—' %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+</div>

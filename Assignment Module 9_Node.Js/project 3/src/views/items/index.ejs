@@ -1,0 +1,40 @@
+<div class="section-header">
+  <span></span>
+  <a href="/items/new" class="btn btn-primary" style="width:auto;margin:0;padding:10px 20px;">+ New Item</a>
+</div>
+
+<% if (items.length === 0) { %>
+  <div class="table-wrap">
+    <div class="empty-state">
+      <div class="empty-icon">◉</div>
+      <p>No items yet. <a href="/items/new">Add your first inventory item.</a></p>
+    </div>
+  </div>
+<% } else { %>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Name</th><th>Category</th><th>Supplier</th><th>Quantity</th><th>Price/Unit</th><th>Status</th></tr>
+      </thead>
+      <tbody>
+        <% items.forEach(item => { %>
+          <tr>
+            <td><a href="/items/<%= item.id %>"><%= item.name %></a></td>
+            <td><span class="tag"><%= item.category_name %></span></td>
+            <td style="font-size:0.85rem;color:var(--text-light);"><%= item.supplier_name || '—' %></td>
+            <td><strong><%= parseFloat(item.quantity) %></strong> <span style="color:var(--text-light);font-size:0.82rem;"><%= item.unit %></span></td>
+            <td>$<%= parseFloat(item.price).toFixed(2) %></td>
+            <td>
+              <div class="stock-indicator">
+                <div class="stock-dot <%= parseFloat(item.quantity) <= parseFloat(item.low_stock_threshold) ? 'low' : 'ok' %>"></div>
+                <span style="font-size:0.82rem;color:var(--text-light);">
+                  <%= parseFloat(item.quantity) <= parseFloat(item.low_stock_threshold) ? 'Low' : 'OK' %>
+                </span>
+              </div>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+<% } %>

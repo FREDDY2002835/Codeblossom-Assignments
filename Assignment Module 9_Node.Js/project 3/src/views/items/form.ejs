@@ -1,0 +1,86 @@
+<a href="/items" class="btn-back">← Back to Inventory</a>
+
+<div class="form-container" style="max-width:720px;">
+  <% if (errors && errors.length > 0) { %>
+    <div class="alert alert-error">
+      <ul class="error-list">
+        <% errors.forEach(e => { %><li><%= e %></li><% }) %>
+      </ul>
+    </div>
+  <% } %>
+
+  <div class="form-card">
+    <form action="/items/<%= item ? item.id : '' %>" method="POST">
+      <div class="form-group">
+        <label class="form-label" for="name">Item Name <span class="required">*</span></label>
+        <input type="text" id="name" name="name" class="form-input"
+          value="<%= item ? item.name : '' %>" placeholder="e.g. Yirgacheffe Single Origin" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="description">Description</label>
+        <textarea id="description" name="description" class="form-textarea"
+          placeholder="Tasting notes, origin, usage..."><%= item ? (item.description || '') : '' %></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="category_id">Category <span class="required">*</span></label>
+          <select id="category_id" name="category_id" class="form-select" required>
+            <option value="">— Select category —</option>
+            <% categories.forEach(cat => { %>
+              <option value="<%= cat.id %>" <%= item && parseInt(item.category_id) === cat.id ? 'selected' : '' %>><%= cat.name %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="supplier_id">Supplier</label>
+          <select id="supplier_id" name="supplier_id" class="form-select">
+            <option value="">— No supplier —</option>
+            <% suppliers.forEach(s => { %>
+              <option value="<%= s.id %>" <%= item && parseInt(item.supplier_id) === s.id ? 'selected' : '' %>><%= s.name %></option>
+            <% }) %>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="quantity">Quantity <span class="required">*</span></label>
+          <input type="number" id="quantity" name="quantity" class="form-input" step="0.01" min="0"
+            value="<%= item ? item.quantity : '0' %>" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="unit">Unit</label>
+          <select id="unit" name="unit" class="form-select">
+            <% ['kg', 'g', 'lb', 'oz', 'units', 'bags', 'boxes', 'liters', 'ml', 'cases'].forEach(u => { %>
+              <option value="<%= u %>" <%= item && item.unit === u ? 'selected' : (u === 'units' && !item ? 'selected' : '') %>><%= u %></option>
+            <% }) %>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="price">Price per Unit ($) <span class="required">*</span></label>
+          <input type="number" id="price" name="price" class="form-input" step="0.01" min="0"
+            value="<%= item ? item.price : '' %>" placeholder="0.00" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="low_stock_threshold">Low Stock Alert At</label>
+          <input type="number" id="low_stock_threshold" name="low_stock_threshold" class="form-input" step="0.01" min="0"
+            value="<%= item ? item.low_stock_threshold : '10' %>">
+        </div>
+      </div>
+      <% if (item && item.id) { %>
+        <div class="admin-section">
+          <div class="admin-label">Admin Authorization Required</div>
+          <div class="form-group">
+            <label class="form-label" for="admin_password">Admin Password <span class="required">*</span></label>
+            <input type="password" id="admin_password" name="admin_password" class="form-input"
+              placeholder="Enter admin password to save changes" required>
+          </div>
+        </div>
+      <% } %>
+      <button type="submit" class="btn-submit">
+        <%= item && item.id ? 'Save Changes' : 'Add to Inventory' %>
+      </button>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,25 @@
+<div class="section-header">
+  <span></span>
+  <a href="/categories/new" class="btn btn-primary" style="width:auto;margin:0;padding:10px 20px;">+ New Category</a>
+</div>
+
+<% if (categories.length === 0) { %>
+  <div class="table-wrap">
+    <div class="empty-state">
+      <div class="empty-icon">◫</div>
+      <p>No categories yet. <a href="/categories/new">Create your first one.</a></p>
+    </div>
+  </div>
+<% } else { %>
+  <div class="cards-grid">
+    <% categories.forEach(cat => { %>
+      <a href="/categories/<%= cat.id %>" class="card">
+        <div class="card-title"><%= cat.name %></div>
+        <% if (cat.description) { %>
+          <div class="card-meta"><%= cat.description %></div>
+        <% } %>
+        <div class="card-count">◉ <%= cat.item_count %> item<%= cat.item_count !== 1 ? 's' : '' %></div>
+      </a>
+    <% }) %>
+  </div>
+<% } %>

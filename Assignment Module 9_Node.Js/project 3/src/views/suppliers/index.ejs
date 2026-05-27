@@ -1,0 +1,31 @@
+<div class="section-header">
+  <span></span>
+  <a href="/suppliers/new" class="btn btn-primary" style="width:auto;margin:0;padding:10px 20px;">+ New Supplier</a>
+</div>
+
+<% if (suppliers.length === 0) { %>
+  <div class="table-wrap">
+    <div class="empty-state">
+      <div class="empty-icon">◷</div>
+      <p>No suppliers yet. <a href="/suppliers/new">Add your first supplier.</a></p>
+    </div>
+  </div>
+<% } else { %>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Supplier</th><th>Country</th><th>Contact</th><th>Items</th></tr>
+      </thead>
+      <tbody>
+        <% suppliers.forEach(s => { %>
+          <tr>
+            <td><a href="/suppliers/<%= s.id %>"><%= s.name %></a></td>
+            <td><%= s.country || '—' %></td>
+            <td style="font-size:0.85rem;color:var(--text-light);"><%= s.contact_email || '—' %></td>
+            <td><span class="tag"><%= s.item_count %></span></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+<% } %>

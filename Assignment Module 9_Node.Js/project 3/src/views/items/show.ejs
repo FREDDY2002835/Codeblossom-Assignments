@@ -1,0 +1,94 @@
+<a href="/items" class="btn-back">← Back to Inventory</a>
+
+<% if (locals.query && query.error === 'wrong_password') { %>
+  <div class="alert alert-error">✗ Incorrect admin password.</div>
+<% } %>
+
+<div class="detail-layout">
+  <div>
+    <div class="detail-card">
+      <div class="detail-header">
+        <h2><%= item.name %></h2>
+        <% if (item.description) { %><p><%= item.description %></p><% } %>
+      </div>
+      <div class="detail-body">
+        <div class="field-list">
+          <div class="field-item">
+            <div class="field-label">Category</div>
+            <div class="field-value"><a href="/categories/<%= item.category_id %>" style="color:var(--caramel);font-weight:500;text-decoration:none;"><%= item.category_name %></a></div>
+          </div>
+          <div class="field-item">
+            <div class="field-label">Supplier</div>
+            <div class="field-value">
+              <% if (item.supplier_id) { %>
+                <a href="/suppliers/<%= item.supplier_id %>" style="color:var(--caramel);font-weight:500;text-decoration:none;"><%= item.supplier_name %></a>
+              <% } else { %>
+                <span style="color:var(--text-light)">No supplier assigned</span>
+              <% } %>
+            </div>
+          </div>
+          <div class="field-item">
+            <div class="field-label">Price</div>
+            <div class="field-value">
+              <span class="price-display">$<%= parseFloat(item.price).toFixed(2) %></span>
+              <span style="color:var(--text-light);font-size:0.85rem;margin-left:6px;">per <%= item.unit %></span>
+            </div>
+          </div>
+          <div class="field-item">
+            <div class="field-label">In Stock</div>
+            <div class="field-value">
+              <div class="stock-indicator" style="gap:10px;">
+                <div class="stock-dot <%= parseFloat(item.quantity) <= parseFloat(item.low_stock_threshold) ? 'low' : 'ok' %>" style="width:10px;height:10px;"></div>
+                <strong style="font-size:1.1rem;"><%= parseFloat(item.quantity) %> <%= item.unit %></strong>
+                <% if (parseFloat(item.quantity) <= parseFloat(item.low_stock_threshold)) { %>
+                  <span class="tag badge-low">Low Stock</span>
+                <% } %>
+              </div>
+            </div>
+          </div>
+          <div class="field-item">
+            <div class="field-label">Low Stock At</div>
+            <div class="field-value" style="color:var(--text-light);"><%= parseFloat(item.low_stock_threshold) %> <%= item.unit %></div>
+          </div>
+          <div class="field-item">
+            <div class="field-label">Total Value</div>
+            <div class="field-value" style="color:var(--mahogany);font-weight:600;">
+              $<%= (parseFloat(item.quantity) * parseFloat(item.price)).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}) %>
+            </div>
+          </div>
+          <div class="field-item">
+            <div class="field-label">Added</div>
+            <div class="field-value" style="color:var(--text-light);"><%= new Date(item.created_at).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' }) %></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="action-panel">
+    <h3>Actions</h3>
+    <a href="/items/<%= item.id %>/edit" class="btn btn-primary">Edit Item</a>
+    <a href="/items" class="btn btn-outline">All Items</a>
+    <a href="/categories/<%= item.category_id %>" class="btn btn-outline">View Category</a>
+    <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <button onclick="document.getElementById('deleteModal').classList.add('open')" class="btn btn-danger">Delete Item</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal">
+    <h3>Delete "<%= item.name %>"</h3>
+    <p>This will permanently remove this item. This action requires admin authorization and cannot be undone.</p>
+    <form action="/items/<%= item.id %>/delete" method="POST">
+      <div class="form-group">
+        <label class="form-label">Admin Password <span class="required">*</span></label>
+        <input type="password" name="admin_password" class="form-input" placeholder="Enter admin password" required>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" onclick="document.getElementById('deleteModal').classList.remove('open')">Cancel</button>
+        <button type="submit" class="btn btn-submit btn-submit-danger" style="width:auto;padding:9px 20px;">Delete</button>
+      </div>
+    </form>
+  </div>
+</div>

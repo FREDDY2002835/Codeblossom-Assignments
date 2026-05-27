@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %> — Brewhouse</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <span class="brand-icon">☕</span>
+      <span class="brand-name">Brewhouse</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="/" class="nav-link <%= locals.title === 'Dashboard' ? 'active' : '' %>">
+        <span class="nav-icon">◈</span> Dashboard
+      </a></li>
+      <li><a href="/items" class="nav-link <%= locals.title === 'All Items' ? 'active' : '' %>">
+        <span class="nav-icon">◉</span> Inventory
+      </a></li>
+      <li><a href="/categories" class="nav-link <%= locals.title === 'Categories' ? 'active' : '' %>">
+        <span class="nav-icon">◫</span> Categories
+      </a></li>
+      <li><a href="/suppliers" class="nav-link <%= locals.title === 'Suppliers' ? 'active' : '' %>">
+        <span class="nav-icon">◷</span> Suppliers
+      </a></li>
+    </ul>
+    <div class="sidebar-footer">
+      <a href="/items/new" class="add-btn">+ Add Item</a>
+    </div>
+  </nav>
+
+  <main class="main-content">
+    <header class="page-header">
+      <h1 class="page-title"><%= title %></h1>
+    </header>
+    <div class="content-area">
+      <%- body %>
+    </div>
+  </main>
+</body>
+</html>

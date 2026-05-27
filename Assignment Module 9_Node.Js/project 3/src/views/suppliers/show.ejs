@@ -1,0 +1,86 @@
+<a href="/suppliers" class="btn-back">← Back to Suppliers</a>
+
+<% if (locals.query && query.error === 'wrong_password') { %>
+  <div class="alert alert-error">✗ Incorrect admin password.</div>
+<% } %>
+
+<div class="detail-layout">
+  <div>
+    <div class="detail-card" style="margin-bottom:24px;">
+      <div class="detail-header">
+        <h2><%= supplier.name %></h2>
+        <% if (supplier.country) { %><p>📍 <%= supplier.country %></p><% } %>
+      </div>
+      <div class="detail-body">
+        <div class="field-list">
+          <% if (supplier.contact_email) { %>
+            <div class="field-item">
+              <div class="field-label">Email</div>
+              <div class="field-value"><a href="mailto:<%= supplier.contact_email %>" style="color:var(--caramel)"><%= supplier.contact_email %></a></div>
+            </div>
+          <% } %>
+          <div class="field-item">
+            <div class="field-label">Items Supplied</div>
+            <div class="field-value"><%= items.length %></div>
+          </div>
+          <div class="field-item">
+            <div class="field-label">Added</div>
+            <div class="field-value"><%= new Date(supplier.created_at).toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' }) %></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-header">
+      <span class="section-title">Items from <%= supplier.name %></span>
+    </div>
+
+    <% if (items.length === 0) { %>
+      <div class="table-wrap">
+        <div class="empty-state"><div class="empty-icon">◉</div><p>No items linked to this supplier.</p></div>
+      </div>
+    <% } else { %>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Item</th><th>Category</th><th>Quantity</th><th>Price</th></tr></thead>
+          <tbody>
+            <% items.forEach(item => { %>
+              <tr>
+                <td><a href="/items/<%= item.id %>"><%= item.name %></a></td>
+                <td><span class="tag"><%= item.category_name %></span></td>
+                <td><%= parseFloat(item.quantity) %> <%= item.unit %></td>
+                <td>$<%= parseFloat(item.price).toFixed(2) %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+
+  <div class="action-panel">
+    <h3>Actions</h3>
+    <a href="/suppliers/<%= supplier.id %>/edit" class="btn btn-primary">Edit Supplier</a>
+    <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <p style="font-size:0.8rem;color:var(--text-light);margin-bottom:12px;">Deleting this supplier will not remove its items — they will simply be unlinked.</p>
+      <button onclick="document.getElementById('deleteModal').classList.add('open')" class="btn btn-danger">Delete Supplier</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal">
+    <h3>Delete Supplier</h3>
+    <p>Items linked to this supplier will remain but lose their supplier association.</p>
+    <form action="/suppliers/<%= supplier.id %>/delete" method="POST">
+      <div class="form-group">
+        <label class="form-label">Admin Password <span class="required">*</span></label>
+        <input type="password" name="admin_password" class="form-input" placeholder="Enter admin password" required>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" onclick="document.getElementById('deleteModal').classList.remove('open')">Cancel</button>
+        <button type="submit" class="btn btn-submit btn-submit-danger" style="width:auto;padding:9px 20px;">Delete</button>
+      </div>
+    </form>
+  </div>
+</div>
