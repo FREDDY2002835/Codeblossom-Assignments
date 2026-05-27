@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head><title>Sign Up</title></head>
+<body>
+  <h1>Sign Up</h1>
+
+  <% if (errors.length > 0) { %>
+    <ul>
+      <% errors.forEach(e => { %>
+        <li><%= e.msg %></li>
+      <% }) %>
+    </ul>
+  <% } %>
+
+  <form method="POST" action="/sign-up">
+    <input type="text" name="firstName" placeholder="First Name" /><br/>
+    <input type="text" name="lastName" placeholder="Last Name" /><br/>
+    <input type="email" name="email" placeholder="Email" /><br/>
+    <input type="password" name="password" placeholder="Password" /><br/>
+    <input type="password" name="confirmPassword" placeholder="Confirm Password" /><br/>
+    <input type="checkbox" name="isAdmin" value="true" /> Admin<br/>
+    <button type="submit">Sign Up</button>
+  </form>
+</body>
+</html>

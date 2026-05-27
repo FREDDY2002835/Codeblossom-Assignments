@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head><title>Join the Club</title></head>
+<body>
+  <h1>Join the Club</h1>
+
+  <% if (error) { %>
+    <p><%= error %></p>
+  <% } %>
+
+  <form method="POST" action="/join-club">
+    <input type="text" name="passcode" placeholder="Enter passcode" /><br/>
+    <button type="submit">Join</button>
+  </form>
+</body>
+</html>

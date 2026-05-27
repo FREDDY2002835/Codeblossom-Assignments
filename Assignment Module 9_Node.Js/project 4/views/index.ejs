@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head><title>Members Club</title></head>
+<body>
+  <h1>Welcome to the Club</h1>
+
+  <% if (user) { %>
+    <a href="/new-message">Create a new message</a> |
+    <a href="/join-club">Join the Club</a> |
+    <a href="/logout">Logout</a>
+  <% } else { %>
+    <a href="/login">Login</a> |
+    <a href="/sign-up">Sign Up</a>
+  <% } %>
+
+  <hr/>
+
+  <% messages.forEach(message => { %>
+    <div>
+      <h3><%= message.title %></h3>
+      <p><%= message.text %></p>
+
+     <% if (user && user.isAdmin) { %>
+  <form method="POST" action="/delete-message/<%= message.id %>">
+    <button type="submit">Delete</button>
+  </form>
+<% } %>
+    </div>
+    <hr/>
+  <% }) %>
+
+</body>
+</html>
